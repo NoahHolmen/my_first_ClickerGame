@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My first ClickerGame</title>
+    <meta name="viewport"content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="discription"content="this a Clicker Game where you can click and upgrade">
+    <meta name="keywords"content="clicker, game, upgrade">
+    <style>
+      body{
+        margin:0;
+        height: 100vh;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        align-content:center;
+        background-color:#0000ff;
+        }
+      #target{
+        width:200px;
+        height:200px;
+        background-color:#ff0000;
+        border:1px solid #ff0000;
+        border-radius:50%;
+        margin:20px auto;
+      }
+      #smallUpgrade{
+        width:100px;
+        height:150px;
+        border-width:6px;
+        border-color:#f000c8;
+        background-color:#ff00f0;
+        text-align:center;
+        border-radius:10%;
+      }
+      #reset{
+        width:5%;
+        height:5%;
+        font-size:10px;
+        font-family:poster;
+        margin-left:90vh;
+        background-color:#a0a0a0;
+      }
+      h1{
+        text-align:center;
+        font-size:50px;
+      }
+      input{
+        text-align:center;
+        max-width:500px;
+        min-width:30px;
+        margin-left:54vh;
+        font-family:fantasy;
+        font-size:30px;
+        background-color:#ffc8ff
+      }
+    </style>
+  </head>
+  <body>
+    <div id="reset" onclick="resset()">reset</div>
+    <input id="nameInput"placeholder="type a name">
+    <h1 id="fscore">0</h1>
+    <div id="target" class="circle" onclick="plusScore()"></div>
+    <div id="smallUpgrade" class="tinyUpgrade" onclick="smallTimes()">times 1.5</div>
+    <script>
+      window.onload = function(){
+        let playerName = document.getElementById('nameInput').value;
+        let score = parseFloat(localStorage.getItem('clickerScore')) || 0;
+        let cps = 0.5;
+        let plus = 1;
+        let cost = 10;
+
+window.updateDisplay = function() {
+  document.getElementById('fscore').innerHTML = score.toFixed(1);
+  document.getElementById('smallUpgrade').innerHTML = `Upgrade x${plus.toFixed(1)} (Cost: ${cost})`;
+  localStorage.setItem('clickerScore', score);
+}
+
+window.plusScore = function() {
+  score += plus;
+  updateDisplay();
+}
+
+window.smallTimes = function() {
+  if (score >= cost) {
+    plus *= 1.1;
+    score -= cost;
+    cost += Math.floor(cost * 1.5);
+    updateDisplay();
+  }
+}
+window.resset = function(){
+  score = 0
+  plus = 1
+  cps = 0.5
+  cost = 10
+}
+// Prevent negative score
+setInterval(() => {
+  if (score < 0) score = 0;
+}, 100);
+
+// Add cps every second
+setInterval(() => {
+  score += cps;
+  updateDisplay();
+}, 1000);
+
+       updateDisplay();}
+
+    </script>
+  </body>
+</html>
