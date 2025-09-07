@@ -25,7 +25,7 @@
         margin:20px auto;
       }
       #smallUpgrade{
-        width:100px;
+        width:150px;
         height:150px;
         border-width:6px;
         border-color:#f000c8;
@@ -36,10 +36,10 @@
       #reset{
         width:5%;
         height:5%;
-        font-size:10px;
+        font-size:25px;
         font-family:poster;
         margin-left:90vh;
-        background-color:#a0a0a0;
+        background-color:#d0d0d0;
       }
       h1{
         text-align:center;
@@ -52,28 +52,38 @@
         margin-left:54vh;
         font-family:fantasy;
         font-size:30px;
-        background-color:#ffc8ff
+        background-color:#ffc8ff;
       }
     </style>
   </head>
   <body>
     <div id="reset" onclick="resset()">reset</div>
-    <input id="nameInput"placeholder="type a name">
+    <input id="nameInput"placeholder="enter a name">
     <h1 id="fscore">0</h1>
     <div id="target" class="circle" onclick="plusScore()"></div>
-    <div id="smallUpgrade" class="tinyUpgrade" onclick="smallTimes()">times 1.5</div>
+    <div id="smallUpgrade" class="tinyUpgrade" onclick="smallTimes()">times 1.1</div>
     <script>
       window.onload = function(){
-        let playerName = document.getElementById('nameInput').value;
+        const nameInput = document.getElementById('nameInput')
+        let playerName = localStorage.getItem('playerName', nameInput)
         let score = parseFloat(localStorage.getItem('clickerScore')) || 0;
-        let cps = 0.5;
-        let plus = 1;
-        let cost = 10;
-
+        let cps = parseFloat(localStorage.getItem('cpsNow')) ||0.5;
+        let plus =parseFloat(localStorage.getItem('pluser'))||1;
+        let cost = parseFloat(localStorage.getItem('aCost'))||10;
+        const savedName = localStorage.getItem('playerName');
+        if(savedName){
+          nameInput.value = savedName;
+        }
+        nameInput.addEventListener('input', function(){
+          localStorage.setItem('playerName', nameInput.value);
+        })
 window.updateDisplay = function() {
   document.getElementById('fscore').innerHTML = score.toFixed(1);
-  document.getElementById('smallUpgrade').innerHTML = `Upgrade x${plus.toFixed(1)} (Cost: ${cost})`;
+  document.getElementById('smallUpgrade').innerHTML = `upgrade:times 1.1(Cost: ${cost})`;
   localStorage.setItem('clickerScore', score);
+  localStorage.setItem('cpsNow', cps);
+  localStorage.setItem('pluser', plus);
+  localStorage.setItem('aCost', cost);
 }
 
 window.plusScore = function() {
@@ -90,14 +100,14 @@ window.smallTimes = function() {
   }
 }
 window.resset = function(){
-  score = 0
+  score = -0.5
   plus = 1
   cps = 0.5
   cost = 10
 }
 // Prevent negative score
 setInterval(() => {
-  if (score < 0) score = 0;
+  if (score < 0){ score = -0.5;}
 }, 100);
 
 // Add cps every second
